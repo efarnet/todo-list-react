@@ -4,16 +4,20 @@ import { Box, Paper, Typography } from "@mui/material";
 import { LoginForm } from "../components/UI/LoginForm";
 import { SnackbarError } from "../components/UI/SnackbarError";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const LoginPage = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
 
+  const navigate = useNavigate();
+
   const handleError = (msg: string) =>
     setSnackbar({ open: true, message: msg });
+
   const handleClose = () => setSnackbar({ ...snackbar, open: false });
 
   const handleSuccess = () => {
-    window.location.href = "/";
+    navigate("/signup");
   };
 
   return (
