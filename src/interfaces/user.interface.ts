@@ -1,7 +1,10 @@
+import type { Gender } from "../enums/Gender";
+
 export interface User {
-  id: string;
-  lastName: string;
-  firstName: string;
-  email: string;
-  gender: string;
+  id?: string;
+  lastname?: string;
+  firstname?: string;
+  email?: string;
+  gender?: Gender;
+  password?: string;
 }

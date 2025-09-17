@@ -1,19 +1,22 @@
-// LoginForm.tsx
+// src/components/UI/SignupForm.tsx
 import { useState } from "react";
-import { login } from "../../api/auth";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, MenuItem } from "@mui/material";
+import { signup } from "../../api/auth";
 import { getErrorMessage } from "../../helpers/apiHelper";
 import { useErrorStore } from "../../stores/useErrorStore";
 import { RegexExpression } from "../../enums/RegexExpression";
 
-interface LoginFormProps {
+interface SignupFormProps {
   onSuccess: () => void;
   onError: (msg: string) => void;
 }
 
-export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
+export const SignupForm = ({ onSuccess, onError }: SignupFormProps) => {
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [gender, setGender] = useState("");
   const [loading, setLoading] = useState(false);
 
   const { errors, setError, clearError } = useErrorStore();
@@ -22,10 +25,20 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
     clearError();
     let valid = true;
 
+    if (!firstname) {
+      setError("firstname", "Firstname is required");
+      valid = false;
+    }
+
+    if (!lastname) {
+      setError("lastname", "Lastname is required");
+      valid = false;
+    }
+
     if (!email) {
       setError("email", "Email is required");
       valid = false;
-    } else if (RegexExpression.EMAIL.test(email)) {
+    } else if (!RegexExpression.EMAIL.test(email)) {
       setError("email", "Invalid email");
       valid = false;
     }
@@ -35,6 +48,11 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
       valid = false;
     } else if (password.length < 8) {
       setError("password", "Password must be at least 8 characters");
+      valid = false;
+    }
+
+    if (!gender) {
+      setError("gender", "Gender is required");
       valid = false;
     }
 
@@ -48,7 +66,7 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
 
     setLoading(true);
     try {
-      await login({ email, password });
+      await signup({ firstname, lastname, email, password, gender });
       onSuccess();
     } catch (err) {
       onError(getErrorMessage(err));
@@ -60,10 +78,27 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
       <TextField
+        label="Firstname"
+        fullWidth
+        margin="normal"
+        value={firstname}
+        onChange={(e) => setFirstname(e.target.value)}
+        error={!!errors.firstname}
+        helperText={errors.firstname}
+      />
+      <TextField
+        label="Lastname"
+        fullWidth
+        margin="normal"
+        value={lastname}
+        onChange={(e) => setLastname(e.target.value)}
+        error={!!errors.lastname}
+        helperText={errors.lastname}
+      />
+      <TextField
         label="Email"
         type="email"
         fullWidth
-        required
         margin="normal"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -74,13 +109,26 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
         label="Password"
         type="password"
         fullWidth
-        required
         margin="normal"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         error={!!errors.password}
         helperText={errors.password}
       />
+      <TextField
+        label="Gender"
+        select
+        fullWidth
+        margin="normal"
+        value={gender}
+        onChange={(e) => setGender(e.target.value)}
+        error={!!errors.gender}
+        helperText={errors.gender}
+      >
+        <MenuItem value="Men">Men</MenuItem>
+        <MenuItem value="Women">Women</MenuItem>
+      </TextField>
+
       <Button
         type="submit"
         variant="contained"
@@ -89,7 +137,7 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
         sx={{ mt: 3 }}
         disabled={loading}
       >
-        {loading ? "Logging in..." : "Login"}
+        {loading ? "Signing up..." : "Sign Up"}
       </Button>
     </Box>
   );
