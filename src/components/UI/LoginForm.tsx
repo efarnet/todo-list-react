@@ -1,5 +1,5 @@
 // LoginForm.tsx
-import { useState } from "react";
+import React, { useState } from "react";
 import { login } from "../../api/auth";
 import { Box, TextField, Button } from "@mui/material";
 import { getErrorMessage } from "../../helpers/apiHelper";
@@ -11,7 +11,7 @@ interface LoginFormProps {
   onError: (msg: string) => void;
 }
 
-export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
+const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
     if (!email) {
       setError("email", "Email is required");
       valid = false;
-    } else if (RegexExpression.EMAIL.test(email)) {
+    } else if (!RegexExpression.EMAIL.test(email)) {
       setError("email", "Invalid email");
       valid = false;
     }
@@ -94,3 +94,5 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
     </Box>
   );
 };
+
+export default React.memo(LoginForm);

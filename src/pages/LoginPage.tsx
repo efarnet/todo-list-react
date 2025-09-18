@@ -1,8 +1,8 @@
 // LoginPage.tsx
 import { useState } from "react";
 import { Box, Paper, Typography } from "@mui/material";
-import { LoginForm } from "../components/UI/LoginForm";
-import { SnackbarError } from "../components/UI/SnackbarError";
+import LoginForm from "../components/UI/LoginForm";
+import SnackbarError from "../components/UI/SnackbarError";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +17,7 @@ export const LoginPage = () => {
   const handleClose = () => setSnackbar({ ...snackbar, open: false });
 
   const handleSuccess = () => {
-    navigate("/signup");
+    navigate("/");
   };
 
   return (

@@ -1,7 +1,7 @@
 // src/pages/SignupPage.tsx
 import { useState } from "react";
 import { Container, Paper, Typography, Snackbar, Alert } from "@mui/material";
-import { SignupForm } from "../components/UI/SignupForm";
+import SignupForm from "../components/UI/SignupForm";
 import { useNavigate } from "react-router-dom";
 
 export const SignupPage = () => {

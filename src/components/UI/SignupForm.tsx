@@ -1,5 +1,5 @@
 // src/components/UI/SignupForm.tsx
-import { useState } from "react";
+import React, { useState } from "react";
 import { Box, TextField, Button, MenuItem } from "@mui/material";
 import { signup } from "../../api/auth";
 import { getErrorMessage } from "../../helpers/apiHelper";
@@ -11,7 +11,7 @@ interface SignupFormProps {
   onError: (msg: string) => void;
 }
 
-export const SignupForm = ({ onSuccess, onError }: SignupFormProps) => {
+const SignupForm = ({ onSuccess, onError }: SignupFormProps) => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -125,8 +125,8 @@ export const SignupForm = ({ onSuccess, onError }: SignupFormProps) => {
         error={!!errors.gender}
         helperText={errors.gender}
       >
-        <MenuItem value="Men">Men</MenuItem>
-        <MenuItem value="Women">Women</MenuItem>
+        <MenuItem value="MEN">Men</MenuItem>
+        <MenuItem value="WOMEN">Women</MenuItem>
       </TextField>
 
       <Button
@@ -142,3 +142,5 @@ export const SignupForm = ({ onSuccess, onError }: SignupFormProps) => {
     </Box>
   );
 };
+
+export default React.memo(SignupForm);

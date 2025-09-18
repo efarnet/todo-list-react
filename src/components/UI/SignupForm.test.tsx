@@ -7,7 +7,7 @@ import {
 } from "@testing-library/react";
 import * as authApi from "../../api/auth";
 import { vi } from "vitest";
-import { SignupForm } from "./SignupForm";
+import SignupForm from "./SignupForm";
 
 // Mock de la fonction signup
 vi.mock("../../api/auth");

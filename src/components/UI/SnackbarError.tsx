@@ -1,4 +1,5 @@
 import { Snackbar, Alert } from "@mui/material";
+import React from "react";
 
 interface SnackbarErrorProps {
   open: boolean;
@@ -6,11 +7,7 @@ interface SnackbarErrorProps {
   onClose: () => void;
 }
 
-export const SnackbarError = ({
-  open,
-  message,
-  onClose,
-}: SnackbarErrorProps) => (
+const SnackbarError = ({ open, message, onClose }: SnackbarErrorProps) => (
   <Snackbar
     open={open}
     autoHideDuration={6000}
@@ -22,3 +19,5 @@ export const SnackbarError = ({
     </Alert>
   </Snackbar>
 );
+
+export default React.memo(SnackbarError);

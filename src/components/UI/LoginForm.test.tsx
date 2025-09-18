@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { LoginForm } from "./LoginForm";
+import LoginForm from "./LoginForm";
 import { vi, describe, it, beforeEach, expect } from "vitest";
 import * as authApi from "../../api/auth";
 
