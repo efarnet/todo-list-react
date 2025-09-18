@@ -1,10 +1,10 @@
-// src/components/UI/SignupForm.tsx
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Box, TextField, Button, MenuItem } from "@mui/material";
-import { signup } from "../../api/auth";
 import { getErrorMessage } from "../../helpers/apiHelper";
 import { useErrorStore } from "../../stores/useErrorStore";
 import { RegexExpression } from "../../enums/RegexExpression";
+import { useAuthStore } from "../../stores/useAuthStore";
+import { Gender } from "../../enums/Gender";
 
 interface SignupFormProps {
   onSuccess: () => void;
@@ -20,8 +20,9 @@ const SignupForm = ({ onSuccess, onError }: SignupFormProps) => {
   const [loading, setLoading] = useState(false);
 
   const { errors, setError, clearError } = useErrorStore();
+  const { signup } = useAuthStore();
 
-  const validate = (): boolean => {
+  const validate = useCallback((): boolean => {
     clearError();
     let valid = true;
 
@@ -57,23 +58,35 @@ const SignupForm = ({ onSuccess, onError }: SignupFormProps) => {
     }
 
     return valid;
-  };
+  }, [firstname, lastname, email, password, gender, clearError, setError]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!validate()) return;
 
-    if (!validate()) return;
-
-    setLoading(true);
-    try {
-      await signup({ firstname, lastname, email, password, gender });
-      onSuccess();
-    } catch (err) {
-      onError(getErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
-  };
+      setLoading(true);
+      try {
+        await signup({ firstname, lastname, email, password, gender });
+        onSuccess();
+      } catch (err) {
+        onError(getErrorMessage(err));
+      } finally {
+        setLoading(false);
+      }
+    },
+    [
+      firstname,
+      lastname,
+      email,
+      password,
+      gender,
+      validate,
+      onSuccess,
+      onError,
+      signup,
+    ]
+  );
 
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
@@ -125,8 +138,8 @@ const SignupForm = ({ onSuccess, onError }: SignupFormProps) => {
         error={!!errors.gender}
         helperText={errors.gender}
       >
-        <MenuItem value="MEN">Men</MenuItem>
-        <MenuItem value="WOMEN">Women</MenuItem>
+        <MenuItem value={Gender.MEN}>Men</MenuItem>
+        <MenuItem value={Gender.WOMEN}>Women</MenuItem>
       </TextField>
 
       <Button

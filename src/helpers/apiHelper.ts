@@ -14,7 +14,6 @@ export const handleApiResponse = async <T>(res: Response): Promise<T> => {
     const status = res.status;
     let message = "Une erreur est survenue";
 
-    // Gestion des messages d'erreur du backend
     if (data && typeof data === "object") {
       if ("message" in data) {
         message = (data as { message: string }).message;

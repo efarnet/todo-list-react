@@ -1,24 +1,28 @@
 // LoginPage.tsx
-import { useState } from "react";
-import { Box, Paper, Typography } from "@mui/material";
-import LoginForm from "../components/UI/LoginForm";
-import SnackbarError from "../components/UI/SnackbarError";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useState, useCallback, Suspense, lazy } from "react";
+import { Box, CircularProgress, Paper, Typography } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+
+const LoginForm = lazy(() => import("../components/UI/LoginForm"));
+const SnackbarError = lazy(() => import("../components/UI/SnackbarError"));
 
 export const LoginPage = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
-
   const navigate = useNavigate();
 
-  const handleError = (msg: string) =>
-    setSnackbar({ open: true, message: msg });
+  const handleError = useCallback(
+    (msg: string) => setSnackbar({ open: true, message: msg }),
+    []
+  );
 
-  const handleClose = () => setSnackbar({ ...snackbar, open: false });
+  const handleClose = useCallback(
+    () => setSnackbar((prev) => ({ ...prev, open: false })),
+    []
+  );
 
-  const handleSuccess = () => {
+  const handleSuccess = useCallback(() => {
     navigate("/");
-  };
+  }, [navigate]);
 
   return (
     <Box
@@ -44,7 +48,11 @@ export const LoginPage = () => {
         <Typography variant="h4" component="h1" textAlign="center" gutterBottom>
           Login
         </Typography>
-        <LoginForm onSuccess={handleSuccess} onError={handleError} />
+
+        <Suspense fallback={<CircularProgress />}>
+          <LoginForm onSuccess={handleSuccess} onError={handleError} />
+        </Suspense>
+
         <Box
           sx={{
             width: "100%",
@@ -67,11 +75,13 @@ export const LoginPage = () => {
         </Box>
       </Paper>
 
-      <SnackbarError
-        open={snackbar.open}
-        message={snackbar.message}
-        onClose={handleClose}
-      />
+      <Suspense fallback={null}>
+        <SnackbarError
+          open={snackbar.open}
+          message={snackbar.message}
+          onClose={handleClose}
+        />
+      </Suspense>
     </Box>
   );
 };

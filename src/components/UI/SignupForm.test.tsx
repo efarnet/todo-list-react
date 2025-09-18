@@ -9,7 +9,6 @@ import * as authApi from "../../api/auth";
 import { vi } from "vitest";
 import SignupForm from "./SignupForm";
 
-// Mock de la fonction signup
 vi.mock("../../api/auth");
 const mockedSignup = (authApi.signup as unknown) as ReturnType<typeof vi.fn>;
 
@@ -102,7 +101,7 @@ describe("SignupForm", () => {
         lastname: "Doe",
         email: "john@example.com",
         password: "Password123",
-        gender: "Men",
+        gender: "MEN",
       });
       expect(mockOnSuccess).toHaveBeenCalled();
     });

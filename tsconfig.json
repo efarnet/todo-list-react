@@ -5,6 +5,14 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "types": ["vitest/globals", "@testing-library/jest-dom"]
+    "types": ["vitest/globals", "@testing-library/jest-dom", "jest", "node"],
+    "jsx": "react-jsx", 
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "skipLibCheck": true
   }
 }

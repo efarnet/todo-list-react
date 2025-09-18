@@ -1,5 +1,9 @@
+import { withAuth } from "./hoc/withAuth";
+
 function App() {
   return <div>Hello World</div>;
 }
 
-export default App;
+const AuthApp = withAuth(App);
+
+export default AuthApp;
