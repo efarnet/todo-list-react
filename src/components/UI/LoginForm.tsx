@@ -1,10 +1,9 @@
-// LoginForm.tsx
-import React, { useState } from "react";
-import { login } from "../../api/auth";
-import { Box, TextField, Button } from "@mui/material";
+import React, { useState, useCallback } from "react";
+import { Box, TextField, Button, CircularProgress } from "@mui/material";
 import { getErrorMessage } from "../../helpers/apiHelper";
 import { useErrorStore } from "../../stores/useErrorStore";
 import { RegexExpression } from "../../enums/RegexExpression";
+import { useAuthStore } from "../../stores/useAuthStore";
 
 interface LoginFormProps {
   onSuccess: () => void;
@@ -17,8 +16,9 @@ const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
   const [loading, setLoading] = useState(false);
 
   const { errors, setError, clearError } = useErrorStore();
+  const { login } = useAuthStore();
 
-  const validate = (): boolean => {
+  const validate = useCallback((): boolean => {
     clearError();
     let valid = true;
 
@@ -39,23 +39,27 @@ const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
     }
 
     return valid;
-  };
+  }, [email, password, clearError, setError]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    if (!validate()) return;
+      if (!validate()) return;
 
-    setLoading(true);
-    try {
-      await login({ email, password });
-      onSuccess();
-    } catch (err) {
-      onError(getErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
-  };
+      setLoading(true);
+      try {
+        await login({ email, password });
+
+        onSuccess();
+      } catch (err) {
+        onError(getErrorMessage(err));
+      } finally {
+        setLoading(false);
+      }
+    },
+    [email, password, validate, onSuccess, onError, login]
+  );
 
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
@@ -89,7 +93,7 @@ const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
         sx={{ mt: 3 }}
         disabled={loading}
       >
-        {loading ? "Logging in..." : "Login"}
+        {loading ? <CircularProgress /> : "Login"}
       </Button>
     </Box>
   );

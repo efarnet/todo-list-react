@@ -24,3 +24,25 @@ export const signup = async ({ firstname, lastname, email, password, gender }: U
 
   return handleApiResponse<User>(res);
 };
+
+export const logout = async (): Promise<User> => {
+   const res = await fetch(`${API_URL}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+
+  return handleApiResponse<User>(res);
+};
+
+export const fetchMe = async () => {
+  const res = await fetch(`${API_URL}/auth/me`, {
+    method: "GET",
+    credentials: "include", 
+  });
+
+  if (!res.ok) {
+    throw new Error("Not authenticated");
+  }
+
+  return handleApiResponse<User>(res);
+};
