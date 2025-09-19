@@ -17,10 +17,9 @@ const SignupForm = ({ onSuccess, onError }: SignupFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const { errors, setError, clearError } = useErrorStore();
-  const { signup } = useAuthStore();
+  const { loading, signup } = useAuthStore();
 
   const validate = useCallback((): boolean => {
     clearError();
@@ -65,14 +64,11 @@ const SignupForm = ({ onSuccess, onError }: SignupFormProps) => {
       e.preventDefault();
       if (!validate()) return;
 
-      setLoading(true);
       try {
         await signup({ firstname, lastname, email, password, gender });
         onSuccess();
       } catch (err) {
         onError(getErrorMessage(err));
-      } finally {
-        setLoading(false);
       }
     },
     [
