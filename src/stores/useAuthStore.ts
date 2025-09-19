@@ -9,7 +9,7 @@ interface AuthState {
   login: ({ email, password }: { email: string, password: string }) => Promise<void>;
   signup: (user: User) => Promise<void>;
   logout: () => Promise<void>;
-  fetchUser: () => Promise<void>;
+  fetchUser: () => Promise<User | undefined>;
 }
 
 type ApiError = { message: string } | Error;
@@ -31,10 +31,9 @@ export const useAuthStore = create<AuthState>((set) => ({
       const error = err as ApiError;
 
       setError("auth", error.message || "Login failed");
-
-      set({ user: null });
+    } finally {
       set({ loading: false });
-    } 
+    }
   },
 
   signup: async (user) => {
@@ -49,8 +48,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       const error = err as ApiError;
 
       setError("auth", error.message || "Signup failed");
-
       set({ user: null });
+    } finally {
       set({ loading: false });
     } 
   },
@@ -58,6 +57,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: async () => {
     const { setError } = useErrorStore.getState();
     set({ loading: true });
+
     try {
       await authApi.logout();
 
@@ -66,6 +66,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       const error = err as ApiError;
 
       setError("auth", error.message || "Logout failed");
+
+    } finally {
       set({ loading: false });
     } 
   },
@@ -73,16 +75,20 @@ export const useAuthStore = create<AuthState>((set) => ({
   fetchUser: async () => {
     const { setError } = useErrorStore.getState();
     set({ loading: true });
+
     try {
       const user = await authApi.fetchMe();
 
       set({ user });
+
+      return user;
     } catch (err: unknown) {
       const error = err as ApiError;
 
       setError("auth", error.message || "Fetch user failed");
       set({ user: null });
+    } finally {
       set({ loading: false });
-    } 
+    }
   },
 }));

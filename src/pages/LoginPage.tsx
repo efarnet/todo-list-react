@@ -1,4 +1,3 @@
-// LoginPage.tsx
 import { useState, useCallback, Suspense, lazy } from "react";
 import { Box, CircularProgress, Paper, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";

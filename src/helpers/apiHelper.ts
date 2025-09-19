@@ -4,9 +4,6 @@ export interface ApiError {
   errors?: Record<string, string[]>; // Pour les erreurs de validation
 }
 
-/**
- * Gestion centralisée des réponses fetch
- */
 export const handleApiResponse = async <T>(res: Response): Promise<T> => {
   const data = (await res.json().catch(() => ({}))) as unknown;
 
@@ -32,9 +29,6 @@ export const handleApiResponse = async <T>(res: Response): Promise<T> => {
   return data as T;
 };
 
-/**
- * Récupère un message utilisateur-friendly selon le type d'erreur
- */
 export const getErrorMessage = (err: unknown): string => {
   if (err && typeof err === "object" && "status" in err) {
     const apiError = err as ApiError;

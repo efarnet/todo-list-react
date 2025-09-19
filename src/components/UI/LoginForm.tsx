@@ -13,10 +13,9 @@ interface LoginFormProps {
 const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const { errors, setError, clearError } = useErrorStore();
-  const { login } = useAuthStore();
+  const { login, loading } = useAuthStore();
 
   const validate = useCallback((): boolean => {
     clearError();
@@ -47,15 +46,12 @@ const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
 
       if (!validate()) return;
 
-      setLoading(true);
       try {
         await login({ email, password });
 
         onSuccess();
       } catch (err) {
         onError(getErrorMessage(err));
-      } finally {
-        setLoading(false);
       }
     },
     [email, password, validate, onSuccess, onError, login]
